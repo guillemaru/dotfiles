@@ -96,7 +96,7 @@ return { -- LSP Configuration & Plugins
 				-- This may be unwanted, since they displace some of your code
 				if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
 					map("<leader>th", function()
-						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
 					end, "[T]oggle Inlay [H]ints")
 				end
 			end,
@@ -128,6 +128,13 @@ return { -- LSP Configuration & Plugins
 			clangd = {},
 			gopls = {},
 			rust_analyzer = {},
+			bashls = {},
+			eslint = {},
+			tsp_server = {},
+			cssls = {},
+			html = {},
+			matlab_ls = {},
+			jsonls = {},
 			-- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
 			--
 

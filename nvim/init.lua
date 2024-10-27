@@ -120,6 +120,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Automatically save the current buffer when switching to another buffer
+vim.api.nvim_create_autocmd("BufLeave", {
+	desc = "Save current buffer when switching to another buffer",
+	pattern = "*",
+	callback = function()
+		if vim.bo.modified then
+			vim.cmd("silent! write")
+		end
+	end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -160,11 +171,12 @@ require("lazy").setup({
 	require("plugins.undo"),
 	require("plugins.which-key"),
 
-	require("plugins.autocompletion.cody"),
+	-- require("plugins.autocompletion.cody"), NOT FUNCTIONAL FOR ENTERPRISE
 	require("plugins.autocompletion.nvim-cmp"),
 	require("plugins.lsp.lsp"),
 
 	require("plugins.versioncontrol.gitsigns"),
+	require("plugins.versioncontrol.perforce"),
 
 	require("plugins.visuals.colorschemes.catppuccin"),
 	-- require("plugins.visuals.colorschemes.tokyo"),
