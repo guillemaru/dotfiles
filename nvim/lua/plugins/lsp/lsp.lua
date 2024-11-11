@@ -34,7 +34,7 @@ return { -- LSP Configuration & Plugins
 				map("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
 
 				-- Find references for the word under your cursor.
-				map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+				map("gr", require("telescope.builtin").lsp_references, "[G]oto [R]references")
 
 				-- Jump to the implementation of the word under your cursor.
 				--  Useful when your language has ways of declaring types without an actual implementation.
@@ -47,11 +47,11 @@ return { -- LSP Configuration & Plugins
 
 				-- Fuzzy find all the symbols in your current document.
 				--  Symbols are things like variables, functions, types, etc.
-				map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+				map("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]symbols")
 
 				-- Fuzzy find all the symbols in your current workspace.
 				--  Similar to document symbols, except searches over your entire project.
-				map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
+				map("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]symbols")
 
 				-- Rename the variable under your cursor.
 				--  Most Language Servers support renaming across files, etc.
@@ -126,9 +126,10 @@ return { -- LSP Configuration & Plugins
 		--  - settings (table): Override the default settings passed when initializing the server.
 		local servers = {
 			clangd = {},
-			gopls = {},
+			cmake = {},
 			rust_analyzer = {},
 			bashls = {},
+			gopls = {},
 			eslint = {},
 			tsp_server = {},
 			cssls = {},
