@@ -47,8 +47,23 @@ zinit light zsh-users/zsh-completions
 # Set keybindings to emacs
 bindkey -e
 
+# node setup
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
 # Add neovim to path
-export PATH="$PATH:/opt/nvim-linux64/bin"
+export PATH="$PATH:/opt/nvim-linux64/bin:$HOME/.local/bin"
+
+# Machine specific env vars
+if [ -f ~/.zsh_env ]; then
+  source ~/.zsh_env
+fi
+
+# For Nintendo Homebrew development
+source /etc/profile.d/devkit-env.sh
+
+# Formatters
+export STYLUA_CONFIG="$HOME/.config/stylua/stylua.toml"
 
 # Neofetch and starship
 eval "$(starship init zsh)"

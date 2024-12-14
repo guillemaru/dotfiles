@@ -126,7 +126,9 @@ return { -- LSP Configuration & Plugins
 		--  - settings (table): Override the default settings passed when initializing the server.
 		local servers = {
 			clangd = {},
-			cmake = {},
+			cmake = {
+				filetypes = { "cmake", "CMakeLists.txt" },
+			},
 			rust_analyzer = {},
 			bashls = {},
 			gopls = {},
@@ -145,8 +147,12 @@ return { -- LSP Configuration & Plugins
 				-- capabilities = {},
 				settings = {
 					Lua = {
-						completion = {
-							callSnippet = "Replace",
+						format = {
+							enable = true,
+							defaultConfig = {
+								indent_style = "space",
+								indent_size = "4",
+							},
 						},
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
 						-- diagnostics = { disable = { 'missing-fields' } },

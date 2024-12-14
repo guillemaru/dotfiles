@@ -125,6 +125,53 @@ vim.api.nvim_create_autocmd("BufLeave", {
 	end,
 })
 
+-- Helper function to set indentation
+local function set_indent(tabstop, shiftwidth, softtabstop, expandtab)
+	-- How many spaces a tab character should represent
+	vim.opt_local.tabstop = tabstop
+	-- How many spaces will neovim add when you press >>, <<, or use automatic indentation
+	vim.opt_local.shiftwidth = shiftwidth
+	-- How many spaces will neovim add when you press the <Tab> key
+	vim.opt_local.softtabstop = softtabstop
+	-- Make tabs behave as spaces
+	vim.opt_local.expandtab = expandtab
+end
+
+-- Setting indentation values: (an LSP may override these)
+-- Specificity First
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"javascript",
+		"typescript",
+		"css",
+		"html",
+		"json",
+		"toml",
+		"yaml",
+		"markdown",
+		"dockerfile",
+	},
+	callback = function()
+		set_indent(2, 2, 2, true)
+	end,
+})
+
+-- Then, default fallback
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"c",
+		"rust",
+		"cpp",
+		"go",
+		"lua",
+		"python",
+		"sh",
+	},
+	callback = function()
+		set_indent(4, 4, 4, true)
+	end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -133,6 +180,19 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- Deal with which code completion to use
+local completionPlugin
+local src_endpoint = os.getenv("SRC_ENDPOINT")
+if src_endpoint then
+	if src_endpoint == "https://sourcegraph.com" then
+		completionPlugin = "plugins.autocompletion.cody"
+	else
+		-- For an enterprise account, use the codyassist plugin
+		completionPlugin = "plugins.autocompletion.codyassist"
+	end
+else
+	completionPlugin = "plugins.autocompletion.codeium"
+end
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -165,7 +225,7 @@ require("lazy").setup({
 	require("plugins.undo"),
 	require("plugins.which-key"),
 
-	-- require("plugins.autocompletion.cody"), NOT FUNCTIONAL FOR ENTERPRISE
+	require(completionPlugin),
 	require("plugins.autocompletion.nvim-cmp"),
 	require("plugins.lsp.lsp"),
 
