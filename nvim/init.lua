@@ -107,76 +107,76 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-	desc = "Highlight when yanking (copying) text",
-	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+    desc = "Highlight when yanking (copying) text",
+    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+    callback = function()
+        vim.highlight.on_yank()
+    end,
 })
 
 -- Automatically save the current buffer when switching to another buffer
 vim.api.nvim_create_autocmd("BufLeave", {
-	desc = "Save current buffer when switching to another buffer",
-	pattern = "*",
-	callback = function()
-		if vim.bo.modified then
-			vim.cmd("silent! write")
-		end
-	end,
+    desc = "Save current buffer when switching to another buffer",
+    pattern = "*",
+    callback = function()
+        if vim.bo.modified then
+            vim.cmd("silent! write")
+        end
+    end,
 })
 
 -- Helper function to set indentation
 local function set_indent(tabstop, shiftwidth, softtabstop, expandtab)
-	-- How many spaces a tab character should represent
-	vim.opt_local.tabstop = tabstop
-	-- How many spaces will neovim add when you press >>, <<, or use automatic indentation
-	vim.opt_local.shiftwidth = shiftwidth
-	-- How many spaces will neovim add when you press the <Tab> key
-	vim.opt_local.softtabstop = softtabstop
-	-- Make tabs behave as spaces
-	vim.opt_local.expandtab = expandtab
+    -- How many spaces a tab character should represent
+    vim.opt_local.tabstop = tabstop
+    -- How many spaces will neovim add when you press >>, <<, or use automatic indentation
+    vim.opt_local.shiftwidth = shiftwidth
+    -- How many spaces will neovim add when you press the <Tab> key
+    vim.opt_local.softtabstop = softtabstop
+    -- Make tabs behave as spaces
+    vim.opt_local.expandtab = expandtab
 end
 
 -- Setting indentation values: (an LSP may override these)
 -- Specificity First
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = {
-		"javascript",
-		"typescript",
-		"css",
-		"html",
-		"json",
-		"toml",
-		"yaml",
-		"markdown",
-		"dockerfile",
-	},
-	callback = function()
-		set_indent(2, 2, 2, true)
-	end,
+    pattern = {
+        "javascript",
+        "typescript",
+        "css",
+        "html",
+        "json",
+        "toml",
+        "yaml",
+        "markdown",
+        "dockerfile",
+    },
+    callback = function()
+        set_indent(2, 2, 2, true)
+    end,
 })
 
 -- Then, default fallback
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = {
-		"c",
-		"rust",
-		"cpp",
-		"go",
-		"lua",
-		"python",
-		"sh",
-	},
-	callback = function()
-		set_indent(4, 4, 4, true)
-	end,
+    pattern = {
+        "c",
+        "rust",
+        "cpp",
+        "go",
+        "lua",
+        "python",
+        "sh",
+    },
+    callback = function()
+        set_indent(4, 4, 4, true)
+    end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
@@ -184,14 +184,20 @@ vim.opt.rtp:prepend(lazypath)
 local completionPlugin
 local src_endpoint = os.getenv("SRC_ENDPOINT")
 if src_endpoint then
-	if src_endpoint == "https://sourcegraph.com" then
-		completionPlugin = "plugins.autocompletion.cody"
-	else
-		-- For an enterprise account, use the codyassist plugin
-		completionPlugin = "plugins.autocompletion.codyassist"
-	end
+    if src_endpoint == "https://sourcegraph.com" then
+        completionPlugin = "plugins.autocompletion.cody"
+    else
+        local filepath = vim.fn.expand("%:p")
+        local dir_name = os.getenv("WORK_ROOT_DIR")
+        if filepath:sub(1, #dir_name) == dir_name then
+            -- For an enterprise account, use the codyassist plugin
+            completionPlugin = "plugins.autocompletion.codyassist"
+        else
+            completionPlugin = "plugins.autocompletion.codeium"
+        end
+    end
 else
-	completionPlugin = "plugins.autocompletion.codeium"
+    completionPlugin = "plugins.autocompletion.codeium"
 end
 -- [[ Configure and install plugins ]]
 --
@@ -205,66 +211,66 @@ end
 --
 -- NOTE: Here is where you install your plugins.
 require("lazy").setup({
-	-- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-	"tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
+    -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
+    "tpope/vim-sleuth", -- Detect tabstop and shiftwidth automatically
 
-	-- NOTE: Plugins can also be added by using a table,
-	-- with the first argument being the link and the following
-	-- keys can be used to configure plugin behavior/loading/etc.
-	--
-	-- Use `opts = {}` to force a plugin to be loaded.
-	--
-	--  This is equivalent to:
-	--    require('Comment').setup({})
+    -- NOTE: Plugins can also be added by using a table,
+    -- with the first argument being the link and the following
+    -- keys can be used to configure plugin behavior/loading/etc.
+    --
+    -- Use `opts = {}` to force a plugin to be loaded.
+    --
+    --  This is equivalent to:
+    --    require('Comment').setup({})
 
-	-- "gc" to comment visual regions/lines
-	{ "numToStr/Comment.nvim", opts = {} },
+    -- "gc" to comment visual regions/lines
+    { "numToStr/Comment.nvim", opts = {} },
 
-	require("plugins.oil"),
-	require("plugins.telescope"),
-	require("plugins.undo"),
-	require("plugins.which-key"),
+    require("plugins.oil"),
+    require("plugins.telescope"),
+    require("plugins.undo"),
+    require("plugins.which-key"),
 
-	require(completionPlugin),
-	require("plugins.autocompletion.nvim-cmp"),
-	require("plugins.lsp.lsp"),
+    require(completionPlugin),
+    require("plugins.autocompletion.nvim-cmp"),
+    require("plugins.lsp.lsp"),
 
-	require("plugins.versioncontrol.gitsigns"),
-	require("plugins.versioncontrol.perforce"),
+    require("plugins.versioncontrol.gitsigns"),
+    require("plugins.versioncontrol.perforce"),
 
-	require("plugins.visuals.colorschemes.catppuccin"),
-	-- require("plugins.visuals.colorschemes.tokyo"),
-	require("plugins.visuals.formatting.autoformat"),
-	require("plugins.visuals.highlighting.treesitter"),
-	require("plugins.visuals.todo-comments"),
+    require("plugins.visuals.colorschemes.catppuccin"),
+    -- require("plugins.visuals.colorschemes.tokyo"),
+    require("plugins.visuals.formatting.autoformat"),
+    require("plugins.visuals.highlighting.treesitter"),
+    require("plugins.visuals.todo-comments"),
 
-	require("plugins.mini"),
-	require("plugins.cmake"),
+    require("plugins.mini"),
+    require("plugins.cmake"),
 
-	{
-		"christoomey/vim-tmux-navigator",
-		lazy = false,
-	},
+    {
+        "christoomey/vim-tmux-navigator",
+        lazy = false,
+    },
 }, {
-	ui = {
-		-- If you are using a Nerd Font: set icons to an empty table which will use the
-		-- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-		icons = vim.g.have_nerd_font and {} or {
-			cmd = "⌘",
-			config = "🛠",
-			event = "📅",
-			ft = "📂",
-			init = "⚙",
-			keys = "🗝",
-			plugin = "🔌",
-			runtime = "💻",
-			require = "🌙",
-			source = "📄",
-			start = "🚀",
-			task = "📌",
-			lazy = "💤 ",
-		},
-	},
+    ui = {
+        -- If you are using a Nerd Font: set icons to an empty table which will use the
+        -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+        icons = vim.g.have_nerd_font and {} or {
+            cmd = "⌘",
+            config = "🛠",
+            event = "📅",
+            ft = "📂",
+            init = "⚙",
+            keys = "🗝",
+            plugin = "🔌",
+            runtime = "💻",
+            require = "🌙",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+            lazy = "💤 ",
+        },
+    },
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
