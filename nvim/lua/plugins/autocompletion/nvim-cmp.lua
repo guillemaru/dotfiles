@@ -101,7 +101,7 @@ return { -- Autocompletion
 				{ name = "luasnip" },
 				{ name = "path" },
 				{ name = "codeium" },
-				-- { name = "cody" },
+				{ name = "cody" },
 			},
 		})
 	end,

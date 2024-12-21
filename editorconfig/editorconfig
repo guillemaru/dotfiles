@@ -1,0 +1,13 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+root = true
+
+[{*.js,*.ts,*.css,*.html,*.json,*.toml,*.yaml,*.yml,*.md,Dockerfile}]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[{*.c,*.h,*.rs,*.cpp,*.hpp,*.go,*.lua,*.py,*.sh}]
+indent_style = space
+indent_size = 4
+tab_width = 4

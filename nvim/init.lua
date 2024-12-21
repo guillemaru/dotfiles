@@ -41,7 +41,7 @@ vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
 -- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 500
 
 -- Configure how new splits should be opened
 -- Horizontal Split: Press Ctrl-w s
@@ -84,7 +84,6 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -133,6 +132,25 @@ if not vim.loop.fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
+-- Deal with which code completion to use
+local completionPlugin
+local src_endpoint = os.getenv("SRC_ENDPOINT")
+if src_endpoint then
+	if src_endpoint == "https://sourcegraph.com" then
+		completionPlugin = "plugins.autocompletion.cody"
+	else
+		local filepath = vim.fn.expand("%:p")
+		local dir_name = os.getenv("WORK_ROOT_DIR")
+		if dir_name ~= nil and filepath:sub(1, #dir_name) == dir_name then
+			-- For an enterprise account, use the codyassist plugin
+			completionPlugin = "plugins.autocompletion.codyassist"
+		else
+			completionPlugin = "plugins.autocompletion.codeium"
+		end
+	end
+else
+	completionPlugin = "plugins.autocompletion.codeium"
+end
 -- [[ Configure and install plugins ]]
 --
 --  To check the current status of your plugins, run
@@ -165,17 +183,15 @@ require("lazy").setup({
 	require("plugins.undo"),
 	require("plugins.which-key"),
 
+	require(completionPlugin),
 	require("plugins.autocompletion.nvim-cmp"),
-	-- require("plugins.autocompletion.cody"), NOT FUNCTIONAL FOR ENTERPRISE
-	-- require("plugins.autocompletion.codeium"),
-	require("plugins.autocompletion.codyassist"),
 	require("plugins.lsp.lsp"),
 
 	require("plugins.versioncontrol.gitsigns"),
 	require("plugins.versioncontrol.perforce"),
 
 	require("plugins.visuals.colorschemes.catppuccin"),
-	-- require("plugins.visuals.colorschemes.tokyo"),
+	require("plugins.visuals.colorschemes.tokyo"),
 	require("plugins.visuals.formatting.autoformat"),
 	require("plugins.visuals.highlighting.treesitter"),
 	require("plugins.visuals.todo-comments"),

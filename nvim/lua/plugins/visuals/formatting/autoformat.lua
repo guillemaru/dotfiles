@@ -1,21 +1,21 @@
 local function isFileOpenedForEdit(filePath)
-	-- Run the p4 opened command and capture the output
-	local command = "p4 opened " .. filePath .. " 2>&1"
-	local handle = io.popen(command)
-	if not handle then
-		return false
-	end
-	local result = handle:read("*a")
-	handle:close()
+    -- Run the p4 opened command and capture the output
+    local command = "p4 opened " .. filePath .. " 2>&1"
+    local handle = io.popen(command)
+    if not handle then
+        return false
+    end
+    local result = handle:read("*a")
+    handle:close()
 
-	-- Check if the output indicates the file is opened for edit
-	if result:find("currently opened for edit") or result:find("edit change") then
-		return true
-	elseif result:find("not") then
-		return false
-	else
-		return false
-	end
+    -- Check if the output indicates the file is opened for edit
+    if result:find("currently opened for edit") or result:find("edit change") then
+        return true
+    elseif result:find("not") then
+        return false
+    else
+        return false
+    end
 end
 
 return {
