@@ -165,8 +165,10 @@ require("lazy").setup({
 	require("plugins.undo"),
 	require("plugins.which-key"),
 
-	-- require("plugins.autocompletion.cody"), NOT FUNCTIONAL FOR ENTERPRISE
 	require("plugins.autocompletion.nvim-cmp"),
+	-- require("plugins.autocompletion.cody"), NOT FUNCTIONAL FOR ENTERPRISE
+	-- require("plugins.autocompletion.codeium"),
+	require("plugins.autocompletion.codyassist"),
 	require("plugins.lsp.lsp"),
 
 	require("plugins.versioncontrol.gitsigns"),

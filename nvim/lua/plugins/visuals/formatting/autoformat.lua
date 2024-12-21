@@ -42,21 +42,22 @@ return {
 			return formatOpts
 		end,
 		formatters_by_ft = {
-			rust = { "rustfmt", lsp_format = "fallback" },
 			cpp = { "clang-format", lsp_format = "fallback" },
 			cmake = { "cmake_format", quiet = true, lsp_format = "fallback" },
+			lua = { "stylua", lsp_format = "fallback" },
+			json = { "jq" },
+			-- You can use stop_after_first to tell conform to run *until* a formatter
+			-- is found.
+			javascript = { "prettierd", "prettier", stop_after_first = true },
 			-- Use the "*" filetype to run formatters on all filetypes.
-			["*"] = { "codespell", "trim_whitespace" },
-			lua = { "stylua" },
+			["*"] = { "trim_whitespace" },
+			--rust = { "rustfmt", lsp_format = "fallback" },
 			-- Conform can also run multiple formatters sequentially
 			--python = { "isort", "black" },
 			--
-			-- You can use stop_after_first to tell conform to run *until* a formatter
-			-- is found.
-			--javascript = { "prettierd", "prettier", stop_after_first = true },
 			-- Use the "_" filetype to run formatters on filetypes that don't
 			-- have other formatters configured.
-			--["_"] = { "trim_whitespace" },
+			--["_"] = { "codespell" },
 		},
 		notify_no_formatters = true,
 	},

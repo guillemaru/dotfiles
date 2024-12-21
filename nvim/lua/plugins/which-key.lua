@@ -20,6 +20,7 @@ return {
 
 		require("which-key").add({
 			{ "<leader>c", group = "[C]ode" },
+			{ "<leader>c", group = "[C]ody", mode = { "v" } },
 			{ "<leader>d", group = "[D]ocument" },
 			{ "<leader>p", group = "[P]erforce" },
 			{ "<leader>r", group = "[R]ename" },
