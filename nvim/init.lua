@@ -96,11 +96,11 @@ vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>", { desc = "[Q]uickfix prev" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- Do not show line numbers in terminal mode
 vim.api.nvim_create_autocmd("TermOpen", {
-    group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
-    callback = function()
-        vim.opt.number = false
-        vim.opt.relativenumber = false
-    end,
+  group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+  callback = function()
+    vim.opt.number = false
+    vim.opt.relativenumber = false
+  end,
 })
 
 -- Disable arrow keys in normal mode
@@ -116,29 +116,29 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-    callback = function()
-        vim.highlight.on_yank()
-    end,
+  desc = "Highlight when yanking (copying) text",
+  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 -- Automatically save the current buffer when switching to another buffer
 vim.api.nvim_create_autocmd("BufLeave", {
-    desc = "Save current buffer when switching to another buffer",
-    pattern = "*",
-    callback = function()
-        if vim.bo.modified then
-            vim.cmd("silent! write")
-        end
-    end,
+  desc = "Save current buffer when switching to another buffer",
+  pattern = "*",
+  callback = function()
+    if vim.bo.modified then
+      vim.cmd("silent! write")
+    end
+  end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end ---@diagnostic disable-next-line: undefined-field
 
 -- Put Lazy into the runtime path for Neovim
@@ -156,48 +156,47 @@ vim.opt.runtimepath:prepend(lazypath)
 --    :Lazy update
 --
 require("lazy").setup({
-    { import = "plugins.cmake" },
-    { import = "plugins.mini" },
-    { import = "plugins.oil" },
-    { import = "plugins.telescope" },
-    { import = "plugins.tmux-navigator" },
-    { import = "plugins.undo" },
-    { import = "plugins.which-key" },
+  { import = "plugins.cmake" },
+  { import = "plugins.mini" },
+  { import = "plugins.oil" },
+  { import = "plugins.telescope" },
+  { import = "plugins.tmux-navigator" },
+  { import = "plugins.undo" },
+  { import = "plugins.which-key" },
 
-    { import = "plugins.autocompletion.llm" },
-    { import = "plugins.autocompletion.nvim-cmp" },
-    { import = "plugins.lsp.lsp" },
+  { import = "plugins.autocompletion.llm" },
+  { import = "plugins.lsp.lsp" },
 
-    { import = "plugins.versioncontrol.gitsigns" },
-    { import = "plugins.versioncontrol.perforce" },
+  { import = "plugins.versioncontrol.gitsigns" },
+  { import = "plugins.versioncontrol.perforce" },
 
-    { import = "plugins.visuals.colorschemes.catppuccin" },
-    { import = "plugins.visuals.colorschemes.tokyo" },
-    { import = "plugins.visuals.formatting.autoformat" },
-    { import = "plugins.visuals.formatting.vimsleuth" },
-    { import = "plugins.visuals.highlighting.treesitter" },
-    { import = "plugins.visuals.comments.todo-comments" },
-    { import = "plugins.visuals.comments.comment-regions" },
+  { import = "plugins.visuals.colorschemes.catppuccin" },
+  { import = "plugins.visuals.colorschemes.tokyo" },
+  { import = "plugins.visuals.formatting.autoformat" },
+  { import = "plugins.visuals.formatting.vimsleuth" },
+  { import = "plugins.visuals.highlighting.treesitter" },
+  { import = "plugins.visuals.comments.todo-comments" },
+  { import = "plugins.visuals.comments.comment-regions" },
 }, {
-    ui = {
-        -- If you are using a Nerd Font: set icons to an empty table which will use the
-        -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-        icons = vim.g.have_nerd_font and {} or {
-            cmd = "⌘",
-            config = "🛠",
-            event = "📅",
-            ft = "📂",
-            init = "⚙",
-            keys = "🗝",
-            plugin = "🔌",
-            runtime = "💻",
-            require = "🌙",
-            source = "📄",
-            start = "🚀",
-            task = "📌",
-            lazy = "💤 ",
-        },
+  ui = {
+    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+    icons = vim.g.have_nerd_font and {} or {
+      cmd = "⌘",
+      config = "🛠",
+      event = "📅",
+      ft = "📂",
+      init = "⚙",
+      keys = "🗝",
+      plugin = "🔌",
+      runtime = "💻",
+      require = "🌙",
+      source = "📄",
+      start = "🚀",
+      task = "📌",
+      lazy = "💤 ",
     },
+  },
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`

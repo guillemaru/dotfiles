@@ -1,5 +1,6 @@
 return { -- Autocompletion
     "hrsh7th/nvim-cmp",
+    enabled = true,
     event = "InsertEnter",
     dependencies = {
         {
@@ -65,7 +66,7 @@ return { -- Autocompletion
 
                 -- If you prefer more traditional completion keymaps,
                 -- you can uncomment the following lines
-                ["<CR>"] = cmp.mapping.confirm({ select = true }),
+                -- ["<CR>"] = cmp.mapping.confirm({ select = true }),
                 ["<Tab>"] = cmp.mapping.select_next_item(),
                 --['<S-Tab>'] = cmp.mapping.select_prev_item(),
 

@@ -1,24 +1,30 @@
 -- Deal with which code completion to use
 local completionPlugin
+local llmPlugin
 local src_endpoint = os.getenv("SRC_ENDPOINT")
 if src_endpoint then
     if src_endpoint == "https://sourcegraph.com" then
-        completionPlugin = "plugins.autocompletion.cody"
+        llmPlugin = "plugins.autocompletion.cody"
+        completionPlugin = "plugins.autocompletion.nvim-cmp"
     else
         local filepath = vim.fn.expand("%:p")
         local dir_name = os.getenv("WORK_ROOT_DIR")
         if dir_name ~= nil and filepath:sub(1, #dir_name) == dir_name then
             -- For an enterprise account, use the codyassist plugin
-            completionPlugin = "plugins.autocompletion.codyassist"
+            llmPlugin = "plugins.autocompletion.codyassist"
+            completionPlugin = "plugins.autocompletion.blinkcmp"
         else
             -- Outside the work directory, prefer Codeium
-            completionPlugin = "plugins.autocompletion.codeium"
+            llmPlugin = "plugins.autocompletion.codeium"
+            completionPlugin = "plugins.autocompletion.nvim-cmp"
         end
     end
 else
-    completionPlugin = "plugins.autocompletion.codeium"
+    llmPlugin = "plugins.autocompletion.codeium"
+    completionPlugin = "plugins.autocompletion.nvim-cmp"
 end
 
 return {
+    require(llmPlugin),
     require(completionPlugin),
 }
