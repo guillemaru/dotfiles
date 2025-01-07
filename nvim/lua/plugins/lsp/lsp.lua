@@ -8,7 +8,7 @@ return { -- LSP Configuration & Plugins
 
         -- Useful status updates for LSP.
         -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-        { "j-hui/fidget.nvim",       opts = {} },
+        { "j-hui/fidget.nvim", opts = {} },
 
         {
             "folke/lazydev.nvim",
@@ -154,7 +154,7 @@ return { -- LSP Configuration & Plugins
             lua_ls = {
                 -- cmd = {...},
                 -- filetypes = { ...},
-                capabilities = { capabilities },
+                -- capabilities = { capabilities },
                 settings = {
                     Lua = {
                         format = {

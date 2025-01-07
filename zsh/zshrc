@@ -60,10 +60,9 @@ if [ -f ~/.zsh_env ]; then
 fi
 
 # For Nintendo Homebrew development
-source /etc/profile.d/devkit-env.sh
-
-# Formatters
-export STYLUA_CONFIG="$HOME/.config/stylua/stylua.toml"
+if [ -f /etc/profile.d/devkit-env.sh ]; then
+    source /etc/profile.d/devkit-env.sh
+fi
 
 # Neofetch and starship
 eval "$(starship init zsh)"

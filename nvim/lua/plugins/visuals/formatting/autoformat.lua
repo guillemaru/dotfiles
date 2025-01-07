@@ -46,8 +46,8 @@ return {
             -- You can use stop_after_first to tell conform to run *until* a formatter
             -- is found.
             javascript = { "prettierd", "prettier", stop_after_first = true },
-            go = { "gofmt", lsp_format = "last" },
-            lua = { "stylua", lsp_format = "last" },
+            go = { "gofmt", lsp_format = "fallback" },
+            lua = { "stylua", lsp_format = "fallback" },
             json = { "jq" },
             -- Use the "*" filetype to run formatters on all filetypes.
             ["*"] = { "trim_whitespace" },

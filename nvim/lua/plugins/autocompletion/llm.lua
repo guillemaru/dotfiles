@@ -1,5 +1,5 @@
 -- Deal with which code completion to use
-local completionPlugin
+--[[ local completionPlugin
 local llmPlugin
 local src_endpoint = os.getenv("SRC_ENDPOINT")
 if src_endpoint then
@@ -22,7 +22,10 @@ if src_endpoint then
 else
     llmPlugin = "plugins.autocompletion.codeium"
     completionPlugin = "plugins.autocompletion.nvim-cmp"
-end
+end ]]
+
+local llmPlugin = "plugins.autocompletion.codyassist"
+local completionPlugin = "plugins.autocompletion.blinkcmp"
 
 return {
     require(llmPlugin),

@@ -22,7 +22,7 @@ vim.opt.showmode = false
 --  See `:help 'clipboard'`
 vim.opt.clipboard = "unnamedplus"
 
--- Enable break indent
+-- Enable break indent (for lines that are longer than the width of the window)
 vim.opt.breakindent = true
 
 -- Save undo history
@@ -35,7 +35,7 @@ vim.opt.smartcase = true
 -- Keep signcolumn on by default
 vim.opt.signcolumn = "yes"
 
--- Decrease update time
+-- Decrease update time to write swap file to disk
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time (default is 1000)
@@ -48,7 +48,7 @@ vim.opt.timeoutlen = 500
 -- Close split:      Press Ctrl-w c
 vim.opt.splitright = true
 vim.opt.splitbelow = true
--- Keybinds to make split navigation easier.
+-- Key binds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -57,9 +57,9 @@ vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower win
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -- Helper to execute Lua code and source config files
-vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>")
-vim.keymap.set("n", "<space>x", ":.lua<CR>")
-vim.keymap.set("v", "<space>x", ":lua<CR>")
+vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>", { desc = "Source file" })
+vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "E[x]ecute lua snippet" })
+vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "E[x]ecute lua snippet" })
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
@@ -75,6 +75,9 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 12
+
+vim.opt.spelllang = "en_us"
+vim.opt.spell = true
 
 -- [[ Basic Keymaps ]]
 
@@ -94,20 +97,16 @@ vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>", { desc = "[Q]uickfix prev" })
 -- is not what someone will guess without a bit more experience.
 -- NOTE: This won't work in all terminal emulators/tmux/etc. use <C-\><C-n> to exit terminal mode
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
--- Do not show line numbers in terminal mode
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
-  callback = function()
-    vim.opt.number = false
-    vim.opt.relativenumber = false
-  end,
-})
 
 -- Disable arrow keys in normal mode
 vim.keymap.set("n", "<left>", '<cmd>echo "Use h to move!!"<CR>')
 vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
+
+vim.keymap.set("n", "<leader>lc", function()
+    vim.api.nvim_set_hl(0, "LineNr", { fg = "#C4C3D0" })
+end, { desc = "Change [L]ine colors (brighter)" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -116,29 +115,38 @@ vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 --  Try it with `yap` in normal mode
 --  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd("TextYankPost", {
-  desc = "Highlight when yanking (copying) text",
-  group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+    desc = "Highlight when yanking (copying) text",
+    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+    callback = function()
+        vim.highlight.on_yank()
+    end,
 })
 
 -- Automatically save the current buffer when switching to another buffer
 vim.api.nvim_create_autocmd("BufLeave", {
-  desc = "Save current buffer when switching to another buffer",
-  pattern = "*",
-  callback = function()
-    if vim.bo.modified then
-      vim.cmd("silent! write")
-    end
-  end,
+    desc = "Save current buffer when switching to another buffer",
+    pattern = "*",
+    callback = function()
+        if vim.bo.modified then
+            vim.cmd("silent! write")
+        end
+    end,
+})
+
+-- Do not show line numbers in terminal mode
+vim.api.nvim_create_autocmd("TermOpen", {
+    group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+    callback = function()
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+    end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+    vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 end ---@diagnostic disable-next-line: undefined-field
 
 -- Put Lazy into the runtime path for Neovim
@@ -156,47 +164,47 @@ vim.opt.runtimepath:prepend(lazypath)
 --    :Lazy update
 --
 require("lazy").setup({
-  { import = "plugins.cmake" },
-  { import = "plugins.mini" },
-  { import = "plugins.oil" },
-  { import = "plugins.telescope" },
-  { import = "plugins.tmux-navigator" },
-  { import = "plugins.undo" },
-  { import = "plugins.which-key" },
+    { import = "plugins.cmake" },
+    { import = "plugins.mini" },
+    { import = "plugins.oil" },
+    { import = "plugins.telescope" },
+    { import = "plugins.tmux-navigator" },
+    { import = "plugins.undo" },
+    { import = "plugins.which-key" },
 
-  { import = "plugins.autocompletion.llm" },
-  { import = "plugins.lsp.lsp" },
+    { import = "plugins.autocompletion.llm" },
+    { import = "plugins.lsp.lsp" },
 
-  { import = "plugins.versioncontrol.gitsigns" },
-  { import = "plugins.versioncontrol.perforce" },
+    { import = "plugins.versioncontrol.gitsigns" },
+    { import = "plugins.versioncontrol.perforce" },
 
-  { import = "plugins.visuals.colorschemes.catppuccin" },
-  { import = "plugins.visuals.colorschemes.tokyo" },
-  { import = "plugins.visuals.formatting.autoformat" },
-  { import = "plugins.visuals.formatting.vimsleuth" },
-  { import = "plugins.visuals.highlighting.treesitter" },
-  { import = "plugins.visuals.comments.todo-comments" },
-  { import = "plugins.visuals.comments.comment-regions" },
+    { import = "plugins.visuals.colorschemes.catppuccin" },
+    { import = "plugins.visuals.colorschemes.tokyo" },
+    { import = "plugins.visuals.formatting.autoformat" },
+    { import = "plugins.visuals.formatting.vimsleuth" },
+    { import = "plugins.visuals.highlighting.treesitter" },
+    { import = "plugins.visuals.comments.todo-comments" },
+    { import = "plugins.visuals.comments.comment-regions" },
 }, {
-  ui = {
-    -- If you are using a Nerd Font: set icons to an empty table which will use the
-    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = "⌘",
-      config = "🛠",
-      event = "📅",
-      ft = "📂",
-      init = "⚙",
-      keys = "🗝",
-      plugin = "🔌",
-      runtime = "💻",
-      require = "🌙",
-      source = "📄",
-      start = "🚀",
-      task = "📌",
-      lazy = "💤 ",
+    ui = {
+        -- If you are using a Nerd Font: set icons to an empty table which will use the
+        -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+        icons = vim.g.have_nerd_font and {} or {
+            cmd = "⌘",
+            config = "🛠",
+            event = "📅",
+            ft = "📂",
+            init = "⚙",
+            keys = "🗝",
+            plugin = "🔌",
+            runtime = "💻",
+            require = "🌙",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+            lazy = "💤 ",
+        },
     },
-  },
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
