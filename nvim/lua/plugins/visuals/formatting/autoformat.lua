@@ -35,30 +35,19 @@ return {
         notify_on_error = true,
         format_on_save = function(bufnr)
             -- Disable "format_on_save lsp_fallback" for certain circumstances.
-            local filepath = vim.fn.expand("%:p") -- Get the full path of the current file
             local formatOpts = {}
-            formatOpts["dry_run"] = isFileOpenedForEdit(filepath) -- if true, formatting won't happen
+            formatOpts["dry_run"] = isFileOpenedForEdit(vim.fn.expand("%:p")) -- if true, formatting won't happen
             formatOpts["timeout_ms"] = 500
             return formatOpts
         end,
         formatters_by_ft = {
             cpp = { "clang-format", lsp_format = "fallback" },
-            -- You can use stop_after_first to tell conform to run *until* a formatter
-            -- is found.
+            lua = { "stylua", lsp_format = "fallback" },
             javascript = { "prettierd", "prettier", stop_after_first = true },
             go = { "gofmt", lsp_format = "fallback" },
-            lua = { "stylua", lsp_format = "fallback" },
             json = { "jq" },
-            -- Use the "*" filetype to run formatters on all filetypes.
-            ["*"] = { "trim_whitespace" },
-            --rust = { "rustfmt", lsp_format = "fallback" },
             -- cmake = { "cmake_format", quiet = true, lsp_format = "fallback" },
-            -- Conform can also run multiple formatters sequentially
-            --python = { "isort", "black" },
-            --
-            -- Use the "_" filetype to run formatters on filetypes that don't
-            -- have other formatters configured.
-            --["_"] = { "codespell" },
+            ["*"] = { "trim_whitespace" },
         },
         notify_no_formatters = true,
     },

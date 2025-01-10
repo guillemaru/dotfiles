@@ -104,9 +104,6 @@ vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
--- Bypass the Ctrl+^ not working in Kitty terminal. Set it to Alt+^
-vim.keymap.set("n", "<M-^>", "<C-^>", { noremap = true, silent = true })
-
 vim.keymap.set("n", "<leader>lc", function()
     vim.api.nvim_set_hl(0, "LineNr", { fg = "#C4C3D0" })
 end, { desc = "Change [L]ine colors (brighter)" })
