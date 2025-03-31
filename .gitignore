@@ -4,3 +4,4 @@ nvim/codyassist_repo.txt
 nvim/spell/*
 
 .DS_Store
+.luarc.json
