@@ -140,14 +140,14 @@ return { -- LSP Configuration & Plugins
                 filetypes = { "cmake", "CMakeLists.txt" },
             },
             rust_analyzer = {},
-            bashls = {},
             gopls = {},
-            eslint = {},
-            tsp_server = {},
-            cssls = {},
-            html = {},
-            matlab_ls = {},
-            jsonls = {},
+            -- bashls = {},
+            -- eslint = {},
+            -- tsp_server = {},
+            -- cssls = {},
+            -- html = {},
+            -- matlab_ls = {},
+            -- jsonls = {},
             -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
             --
 
@@ -198,6 +198,8 @@ return { -- LSP Configuration & Plugins
                     require("lspconfig")[server_name].setup(server)
                 end,
             },
+            ensure_installed = {},
+            automatic_installation = true,
         })
     end,
 }

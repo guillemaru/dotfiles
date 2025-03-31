@@ -2,3 +2,5 @@ tmux/plugins/*
 nvim/lazy-lock.json
 nvim/codyassist_repo.txt
 nvim/spell/*
+
+.DS_Store

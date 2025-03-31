@@ -1,0 +1,8 @@
+font-family = "Hack Nerd Font"
+font-size = 18
+background-opacity = 0.90
+theme = catppuccin-mocha
+gtk-titlebar = false
+cursor-style = block_hollow
+fullscreen = true
+window-decoration = auto

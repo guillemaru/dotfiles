@@ -173,6 +173,7 @@ require("lazy").setup({
     { import = "plugins.which-key" },
 
     { import = "plugins.autocompletion.llm" },
+    { import = "plugins.autocompletion.blinkcmp" },
     { import = "plugins.lsp.lsp" },
 
     { import = "plugins.versioncontrol.gitsigns" },

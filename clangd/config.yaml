@@ -6,14 +6,17 @@ CompileFlags:
     - -pedantic
 Diagnostics:
   ClangTidy:
-    Add: modernize*
-    Remove: modernize-use-trailing-return-type
+    Add:
+    - bugprone*
+    - cppcoreguidelines*
+    - modernize*
+    - performance*
+    # - readability*
+    Remove:
+    - modernize-use-trailing-return-type
+    - cppcoreguidelines-avoid-magic-numbers
     FastCheckFilter: Loose
     CheckOptions:
       readability-identifier-naming.VariableCase: CamelCase
-      boost-use-ranges
-      bugprone-argument-comment
-      bugprone-assignment-in-if-condition
-      bugprone-copy-constructor-init
   UnusedIncludes: Strict
   Suppress: []
