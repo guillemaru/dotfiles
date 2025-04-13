@@ -15,6 +15,9 @@ Diagnostics:
     Remove:
     - modernize-use-trailing-return-type
     - cppcoreguidelines-avoid-magic-numbers
+    - cppcoreguidelines-special-member-functions
+    - bugprone-empty-catch
+    - modernize-use-nodiscard
     FastCheckFilter: Loose
     CheckOptions:
       readability-identifier-naming.VariableCase: CamelCase
