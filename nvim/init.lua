@@ -167,10 +167,12 @@ require("lazy").setup({
     { import = "plugins.cmake" },
     { import = "plugins.mini" },
     { import = "plugins.oil" },
-    { import = "plugins.telescope" },
     { import = "plugins.tmux-navigator" },
     { import = "plugins.undo" },
     { import = "plugins.which-key" },
+
+    { import = "plugins.navigation.telescope" },
+    { import = "plugins.navigation.harpoon" },
 
     { import = "plugins.autocompletion.llm" },
     { import = "plugins.autocompletion.blinkcmp" },
