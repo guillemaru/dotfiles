@@ -5,5 +5,7 @@ if src_endpoint then
         require("plugins.autocompletion.codyassist"),
     }
 else
-    return {}
+    return {
+        "ggml-org/llama.vim",
+    }
 end
