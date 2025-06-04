@@ -183,11 +183,12 @@ require("lazy").setup({
 
     { import = "plugins.visuals.colorschemes.catppuccin" },
     { import = "plugins.visuals.colorschemes.tokyo" },
+    { import = "plugins.visuals.comments.todo-comments" },
+    { import = "plugins.visuals.comments.comment-regions" },
     { import = "plugins.visuals.formatting.autoformat" },
     { import = "plugins.visuals.formatting.vimsleuth" },
     { import = "plugins.visuals.highlighting.treesitter" },
-    { import = "plugins.visuals.comments.todo-comments" },
-    { import = "plugins.visuals.comments.comment-regions" },
+    { import = "plugins.visuals.lualine" },
 }, {
     ui = {
         -- If you are using a Nerd Font: set icons to an empty table which will use the

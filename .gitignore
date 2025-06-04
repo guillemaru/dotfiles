@@ -3,5 +3,5 @@ nvim/lazy-lock.json
 nvim/codyassist_repo.txt
 nvim/spell/*
 
-.DS_Store
+**/.DS_Store
 .luarc.json

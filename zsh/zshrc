@@ -82,11 +82,15 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='nvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='nvim'
+else
+  export EDITOR='nvim'
+fi
+
+# If 'which nvim' is not empty, set EDITOR env variable to nvim
+[[ -n $(which nvim) ]] && export EDITOR='nvim'
+[[ -n $(which nvim) ]] && export GIT_EDITOR='nvim'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -111,12 +115,15 @@ SAVEHIST=1000
 HISTFILE=~/.zsh_history
 
 # node setup
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
-# Machine specific env vars
+# Machine specific env vars and personal configuration
 if [ -f ~/.zsh_env ]; then
   source ~/.zsh_env
+fi
+if [ -f ~/.zsh_mine ]; then
+  source ~/.zsh_mine
 fi
 
 # For Nintendo Homebrew development

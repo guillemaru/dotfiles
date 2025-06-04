@@ -200,6 +200,7 @@ return { -- LSP Configuration & Plugins
             },
             ensure_installed = {},
             automatic_installation = true,
+            automatic_enable = true,
         })
     end,
 }

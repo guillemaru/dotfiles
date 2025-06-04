@@ -1,5 +1,7 @@
 return {
-    "guillemaru/codyassist",
+    -- "guillemaru/codyassist",
+    dir = "/Users/guillemaru/PersonalProjects/codyassist",
+    name = "codyassist",
     dependencies = {
         "nvim-lua/plenary.nvim",
     },

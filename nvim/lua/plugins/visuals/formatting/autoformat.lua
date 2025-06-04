@@ -33,7 +33,7 @@ return {
     },
     opts = {
         notify_on_error = true,
-        format_on_save = function(bufnr)
+        format_on_save = function(--[[ bufnr ]])
             -- Disable "format_on_save lsp_fallback" for certain circumstances.
             local formatOpts = {}
             formatOpts["dry_run"] = isFileOpenedForEdit(vim.fn.expand("%:p")) -- if true, formatting won't happen
