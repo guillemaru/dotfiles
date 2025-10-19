@@ -1,12 +1,15 @@
 return {
-    -- "guillemaru/codyassist",
-    dir = "/Users/guillemaru/PersonalProjects/codyassist",
+    "guillemaru/codyassist",
     name = "codyassist",
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
     config = function()
-        require("codyassist").setup()
+        require("codyassist").setup({
+            window = { width = 0.4, height = 0.9 },
+            context = { include_buffers = "opened" },
+        })
+
         vim.keymap.set("n", "<leader>ce", function()
             require("codyassist").EnableRepo()
         end, { noremap = true, silent = true, desc = "Enable using Cody context repo" })

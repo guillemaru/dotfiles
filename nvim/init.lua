@@ -58,7 +58,7 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 
 -- Helper to execute Lua code and source config files
 vim.keymap.set("n", "<space><space>x", "<cmd>source %<CR>", { desc = "Source file" })
-vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "E[x]ecute lua snippet" })
+vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "E[x]ecute current Lua line" })
 vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "E[x]ecute lua snippet" })
 
 -- Sets how neovim will display certain whitespace characters in the editor.
