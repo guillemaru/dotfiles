@@ -131,6 +131,9 @@ if [ -f /etc/profile.d/devkit-env.sh ]; then
   source /etc/profile.d/devkit-env.sh
 fi
 
+# Enable vim style key-bindings
+set -o vi
+
 # Neofetch and starship
 eval "$(starship init zsh)"
 neofetch
