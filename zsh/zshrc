@@ -135,7 +135,3 @@ fi
 eval "$(starship init zsh)"
 neofetch
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/guillemaru/.lmstudio/bin"
-# End of LM Studio CLI section
-
