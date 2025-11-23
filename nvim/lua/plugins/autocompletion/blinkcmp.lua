@@ -30,7 +30,40 @@ return {
             -- FALLBACK
             fallback = "󰜚",
         }
-        -- You must call setup manually
+        local default_sources = {
+            "buffer",
+            "git",
+            "lazydev",
+            "lsp",
+            "path",
+            "snippets",
+        }
+        local default_providers = {
+            lazydev = {
+                name = "LazyDev",
+                module = "lazydev.integrations.blink",
+                -- make lazydev completions higher priority (see `:h blink.cmp`)
+                score_offset = 50,
+            },
+            git = {
+                module = "blink-cmp-git",
+                name = "Git",
+                opts = {},
+            },
+        }
+        if vim.fn.has("mac") == 1 then
+            -- mac can use the GPU to provide faster completions with minuet
+            table.insert(default_sources, "minuet")
+            default_providers.minuet = {
+                name = "minuet",
+                module = "minuet.blink",
+                async = true,
+                -- Should match minuet.config.request_timeout * 1000,
+                -- since minuet.config.request_timeout is in seconds
+                timeout_ms = 2500,
+                score_offset = 100, -- Gives minuet higher priority among suggestions
+            }
+        end
         require("blink-cmp").setup({
             keymap = {
                 -- 'default' for mappings similar to built-in completion
@@ -51,51 +84,8 @@ return {
             },
 
             sources = {
-                default = {
-                    "lsp",
-                    "path",
-                    "snippets",
-                    -- "buffer",
-                    "lazydev",
-                    -- "tmux",
-                    "git",
-                    "minuet",
-                },
-                providers = {
-                    lazydev = {
-                        name = "LazyDev",
-                        module = "lazydev.integrations.blink",
-                        -- make lazydev completions higher priority (see `:h blink.cmp`)
-                        score_offset = 50,
-                    },
-                    tmux = {
-                        module = "blink-cmp-tmux",
-                        name = "tmux",
-                        -- default options
-                        opts = {
-                            all_panes = true,
-                            capture_history = false,
-                            -- only suggest completions from `tmux` if the `trigger_chars` are
-                            -- used
-                            triggered_only = true,
-                            trigger_chars = { "." },
-                        },
-                    },
-                    git = {
-                        module = "blink-cmp-git",
-                        name = "Git",
-                        opts = {},
-                    },
-                    minuet = {
-                        name = "minuet",
-                        module = "minuet.blink",
-                        async = true,
-                        -- Should match minuet.config.request_timeout * 1000,
-                        -- since minuet.config.request_timeout is in seconds
-                        timeout_ms = 1500,
-                        score_offset = 100, -- Gives minuet higher priority among suggestions
-                    },
-                },
+                default = default_sources,
+                providers = default_providers,
             },
             signature = {
                 enabled = true,

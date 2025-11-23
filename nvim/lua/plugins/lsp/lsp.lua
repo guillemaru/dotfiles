@@ -97,6 +97,14 @@ return { -- LSP Configuration & Plugins
                         group = highlight_augroup,
                         callback = vim.lsp.buf.clear_references,
                     })
+
+                    vim.api.nvim_create_autocmd("LspDetach", {
+                        group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+                        callback = function(event2)
+                            vim.lsp.buf.clear_references()
+                            vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event2.buf })
+                        end,
+                    })
                 end
 
                 -- The following autocommand is used to enable inlay hints in your
@@ -108,14 +116,6 @@ return { -- LSP Configuration & Plugins
                         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({}))
                     end, "[T]oggle Inlay [H]ints")
                 end
-            end,
-        })
-
-        vim.api.nvim_create_autocmd("LspDetach", {
-            group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
-            callback = function(event)
-                vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds({ group = "kickstart-lsp-highlight", buffer = event.buf })
             end,
         })
 
@@ -188,6 +188,7 @@ return { -- LSP Configuration & Plugins
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
         require("mason-lspconfig").setup({
+            automatic_enable = true,
             handlers = {
                 function(server_name)
                     local server = servers[server_name] or {}
@@ -200,7 +201,6 @@ return { -- LSP Configuration & Plugins
             },
             ensure_installed = {},
             automatic_installation = true,
-            automatic_enable = true,
         })
     end,
 }

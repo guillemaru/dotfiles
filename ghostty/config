@@ -4,3 +4,4 @@ background-opacity = 0.90
 theme = catppuccin-mocha.conf
 window-decoration = none
 macos-icon = retro
+maximize = true

@@ -11,15 +11,18 @@ Diagnostics:
     - cppcoreguidelines*
     - modernize*
     - performance*
-    # - readability*
+    - readability*
     Remove:
-    - modernize-use-trailing-return-type
+    - bugprone-empty-catch
+    - bugprone-easily-swappable-parameters
     - cppcoreguidelines-avoid-magic-numbers
     - cppcoreguidelines-special-member-functions
-    - bugprone-empty-catch
     - modernize-use-nodiscard
+    - modernize-use-trailing-return-type
+    - readability-identifier-length
+    - readability-identifier-naming
+    - readability-implicit-bool-conversion
+    - readability-uppercase-literal-suffix
     FastCheckFilter: Loose
-    CheckOptions:
-      readability-identifier-naming.VariableCase: CamelCase
   UnusedIncludes: Strict
   Suppress: []

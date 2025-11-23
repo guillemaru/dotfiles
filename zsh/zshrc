@@ -127,14 +127,24 @@ if [ -f ~/.zsh_mine ]; then
 fi
 
 # For Nintendo Homebrew development
-if [ -f /etc/profile.d/devkit-env.sh ]; then
-  source /etc/profile.d/devkit-env.sh
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export DEVKITARM=/opt/devkitpro/devkitARM
+  export DEVKITPRO=/opt/devkitpro
+elif [[ "$OSTYPE" == "linux"* ]]; then
+  if [ -f /etc/profile.d/devkit-env.sh ]; then
+    source /etc/profile.d/devkit-env.sh
+  fi
 fi
 
-# Enable vim style key-bindings
+# Enable vim motions for terminal commands (press Esc to enter vim mode)
 set -o vi
 
 # Neofetch and starship
 eval "$(starship init zsh)"
 neofetch
+
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/guillemaru/.lmstudio/bin"
+# End of LM Studio CLI section
 
