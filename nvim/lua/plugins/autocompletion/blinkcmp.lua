@@ -51,19 +51,16 @@ return {
                 opts = {},
             },
         }
-        if vim.fn.has("mac") == 1 then
-            -- mac can use the GPU to provide faster completions with minuet
-            table.insert(default_sources, "minuet")
-            default_providers.minuet = {
-                name = "minuet",
-                module = "minuet.blink",
-                async = true,
-                -- Should match minuet.config.request_timeout * 1000,
-                -- since minuet.config.request_timeout is in seconds
-                timeout_ms = 2500,
-                score_offset = 100, -- Gives minuet higher priority among suggestions
-            }
-        end
+        table.insert(default_sources, "minuet")
+        default_providers.minuet = {
+            name = "minuet",
+            module = "minuet.blink",
+            async = true,
+            -- Should match minuet.config.request_timeout * 1000,
+            -- since minuet.config.request_timeout is in seconds
+            timeout_ms = 2500,
+            score_offset = 100, -- Gives minuet higher priority among suggestions
+        }
         require("blink-cmp").setup({
             keymap = {
                 -- 'default' for mappings similar to built-in completion
