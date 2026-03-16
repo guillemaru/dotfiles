@@ -18,16 +18,22 @@ return {
     config = function() -- This is the function that runs, AFTER loading
         require("which-key").setup()
         require("which-key").add({
+            { "<leader>a", group = "[C]Claude" },
             { "<leader>c", group = "[C]ode", mode = { "n", "x" } },
             { "<leader>d", group = "[D]ocument" },
-            { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+            { "<leader>e", group = "[E]xplorer" },
+            { "<leader>f", group = "[F]ormat" },
+            { "<leader>g", group = "[G]it" },
+            { "<leader>h", group = "[H]arpoon", mode = { "n", "v" } },
             { "<leader>l", group = "[L]ine" },
+            { "<leader>m", group = "[M]inuet" },
             { "<leader>p", group = "[P]erforce" },
             { "<leader>r", group = "[R]ename" },
             { "<leader>s", group = "[S]earch" },
             { "<leader>t", group = "[T]oggle" },
+            { "<leader>u", group = "[U]ndo" },
             { "<leader>w", group = "[W]orkspace" },
-            { "<leader>-", group = "[O]il" },
+            { "<leader>z", group = "[Z]en" },
         })
     end,
 }

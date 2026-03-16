@@ -1,24 +1,17 @@
 return {
     "catppuccin/nvim",
     name = "catppuccin",
-    priority = 2000, -- Higher than tokyonight
     config = function()
         require("catppuccin").setup({
             flavour = "mocha", -- latte, frappe, macchiato, mocha
             styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-                comments = { "italic" }, -- Change the style of comments
+                comments = { "italic" },
                 conditionals = { "italic" },
                 loops = { "italic" },
-                functions = {},
-                keywords = {},
-                strings = {},
-                variables = {},
-                numbers = {},
-                booleans = {},
-                properties = {},
-                types = {},
-                operators = {},
-                -- miscs = {}, -- Uncomment to turn off hard-coded styles
+                functions = { "bold" },
+                keywords = { "bold" },
+                booleans = { "bold" },
+                types = { "bold", "italic" },
             },
             color_overrides = {},
             custom_highlights = {},

@@ -26,17 +26,18 @@ return {
             git = "",
             tags = "",
             cmdline = "󰘳",
-            -- tmux = "",
+            tmux = "",
             -- FALLBACK
             fallback = "󰜚",
         }
         local default_sources = {
             "buffer",
-            "git",
+            -- "git",
             "lazydev",
             "lsp",
             "path",
             "snippets",
+            -- "tmux",
         }
         local default_providers = {
             lazydev = {
@@ -48,7 +49,21 @@ return {
             git = {
                 module = "blink-cmp-git",
                 name = "Git",
+                -- only enable this source when filetype is gitcommit, markdown, or 'octo'
+                enabled = function()
+                    return vim.tbl_contains({ "octo", "gitcommit", "markdown" }, vim.bo.filetype)
+                end,
                 opts = {},
+            },
+            tmux = {
+                module = "blink-cmp-tmux",
+                name = "tmux",
+                opts = {
+                    all_panes = true,
+                    capture_history = false,
+                    triggered_only = false,
+                    score_offset = 0,
+                },
             },
         }
         table.insert(default_sources, "minuet")
@@ -58,7 +73,7 @@ return {
             async = true,
             -- Should match minuet.config.request_timeout * 1000,
             -- since minuet.config.request_timeout is in seconds
-            timeout_ms = 2500,
+            timeout_ms = 3000,
             score_offset = 100, -- Gives minuet higher priority among suggestions
         }
         require("blink-cmp").setup({
@@ -135,6 +150,11 @@ return {
                     show_on_trigger_character = true,
                     show_on_insert_on_trigger_character = true,
                     show_on_accept_on_trigger_character = true,
+                    show_on_insert = true,
+                    show_on_backspace = true,
+                    show_on_backspace_after_accept = true,
+                    show_on_backspace_after_insert_enter = true,
+                    show_on_backspace_in_keyword = true,
                 },
                 documentation = {
                     auto_show = true,

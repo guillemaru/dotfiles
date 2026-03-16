@@ -1,4 +1,13 @@
+local function isInPerforceWorkspace(filePath)
+    return vim.fn.findfile(".perforce", vim.fn.fnamemodify(filePath, ":h") .. ";") ~= ""
+end
+
 local function isFileOpenedForEdit(filePath)
+    -- Skip p4 check if not in a Perforce workspace
+    if not isInPerforceWorkspace(filePath) then
+        return false
+    end
+
     -- Run the p4 opened command and capture the output
     local command = "p4 opened " .. filePath .. " 2>&1"
     local handle = io.popen(command)
@@ -11,11 +20,8 @@ local function isFileOpenedForEdit(filePath)
     -- Check if the output indicates the file is opened for edit
     if result:find("currently opened for edit") or result:find("edit change") then
         return true
-    elseif result:find("not") then
-        return false
-    else
-        return false
     end
+    return false
 end
 
 local function isMarkDown(bufnr)
@@ -42,7 +48,7 @@ return {
             -- Disable "format_on_save lsp_fallback" for certain circumstances.
             local formatOpts = {}
             formatOpts["dry_run"] = isFileOpenedForEdit(vim.fn.expand("%:p")) or isMarkDown(bufnr) -- if true, formatting won't happen
-            formatOpts["timeout_ms"] = 500
+            formatOpts["timeout_ms"] = 1000
             return formatOpts
         end,
         formatters_by_ft = {

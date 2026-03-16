@@ -8,20 +8,20 @@ return {
         enabled = true,
         opts = {
             provider = "openai_fim_compatible",
-            request_timeout = 2.5,
+            request_timeout = 3,
             n_completions = 1, -- recommend for local model for resource saving
             -- I recommend beginning with a small context window size and incrementally
             -- expanding it, depending on your local computing power. A context window
             -- of 512, serves as an good starting point to estimate your computing
             -- power. Once you have a reliable estimate of your local computing power,
             -- you should adjust the context window to a larger value.
-            context_window = 512,
+            context_window = 128,
             throttle = 1000, -- only send the request every x milliseconds
-            debounce = 500, -- wait x milliseconds after not typing before sending a request
+            debounce = 800, -- wait x milliseconds after not typing before sending a request
             notify = "error", -- false: Disable all notifications (use boolean false, not string "false")
             virtualtext = {
                 auto_trigger_ft = { --[[ "*" ]]
-                },
+                }, -- uncomment if virtualtext suggestions desired
                 keymap = {
                     accept = "<A-]>", -- accept whole completion
                     accept_line = "<A-[>",
@@ -40,9 +40,10 @@ return {
                     -- post-launch.
                     model = "PLACEHOLDER",
                     optional = {
-                        max_tokens = 128,
-                        top_p = 0.9,
-                        stop = { "\n\n" },
+                        max_tokens = 32,
+                        top_p = 0.85,
+                        temperature = 0.2, -- Lower temp = more focused, deterministic
+                        stop = { "<|fim_begin|>", "<|fim_hole|>", "<|fim_end|>", "<|file_sep|>", "<|endoftext|>" },
                     },
                     stream = true,
                     -- Llama.cpp does not support the `suffix` option in FIM completion.

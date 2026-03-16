@@ -1,6 +1,7 @@
 return {
     "guillemaru/codyassist",
     name = "codyassist",
+    enabled = false,
     dependencies = {
         "nvim-lua/plenary.nvim",
     },

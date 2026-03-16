@@ -2,12 +2,10 @@ return { -- LSP Configuration & Plugins
     "neovim/nvim-lspconfig",
     dependencies = {
         -- Automatically install LSPs and related tools to stdpath for Neovim
-        { "williamboman/mason.nvim", config = true }, -- NOTE: Must be loaded before dependants
-        "williamboman/mason-lspconfig.nvim",
+        { "williamboman/mason.nvim", config = true },
         "WhoIsSethDaniel/mason-tool-installer.nvim",
 
         -- Useful status updates for LSP.
-        -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
         { "j-hui/fidget.nvim", opts = {} },
 
         {
@@ -15,7 +13,6 @@ return { -- LSP Configuration & Plugins
             ft = "lua", -- only load on lua files
             opts = {
                 library = {
-                    -- See the configuration section for more details
                     -- Load luvit types when the `vim.uv` word is found
                     { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 },
@@ -24,10 +21,6 @@ return { -- LSP Configuration & Plugins
         "saghen/blink.cmp",
     },
     config = function()
-        --  This function gets run when an LSP attaches to a particular buffer.
-        --    That is to say, every time a new file is opened that is associated with
-        --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
-        --    function will be executed to configure the current buffer
         vim.api.nvim_create_autocmd("LspAttach", {
             group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
             callback = function(event)
@@ -70,10 +63,6 @@ return { -- LSP Configuration & Plugins
                 -- or a suggestion from your LSP for this to activate.
                 map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-                -- Opens a popup that displays documentation about the word under your cursor
-                --  See `:help K` for why this keymap.
-                map("K", vim.lsp.buf.hover, "Hover Documentation")
-
                 -- WARN: This is not Goto Definition, this is Goto Declaration.
                 --  For example, in C this would take you to the header.
                 map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
@@ -84,7 +73,8 @@ return { -- LSP Configuration & Plugins
                 --
                 -- When you move your cursor, the highlights will be cleared (the second autocommand).
                 local client = vim.lsp.get_client_by_id(event.data.client_id)
-                if client and client.server_capabilities.documentHighlightProvider then
+                local is_large_file = vim.api.nvim_buf_line_count(event.buf) > 1000
+                if client and client.server_capabilities.documentHighlightProvider and not is_large_file then
                     local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = true })
                     vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                         buffer = event.buf,
@@ -119,13 +109,16 @@ return { -- LSP Configuration & Plugins
             end,
         })
 
-        -- LSP servers and clients are able to communicate to each other what features they support.
-        --  By default, Neovim doesn't support everything that is in the LSP specification.
-        --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-        --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-        local capabilities = vim.lsp.protocol.make_client_capabilities()
-        -- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-        capabilities = vim.tbl_deep_extend("force", capabilities, require("blink.cmp").get_lsp_capabilities())
+        -- Clang specific helper functions
+        local default_publish = vim.lsp.handlers["textDocument/publishDiagnostics"]
+        local disable_clang_codes = {
+            constexpr_var_requires_const_init = true,
+        }
+        local function filter_clang_diagnostics(diags)
+            return vim.tbl_filter(function(d)
+                return not (type(d.code) == "string" and disable_clang_codes[d.code])
+            end, diags)
+        end
 
         -- Enable the following language servers
         --
@@ -135,12 +128,48 @@ return { -- LSP Configuration & Plugins
         --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
         --  - settings (table): Override the default settings passed when initializing the server.
         local servers = {
-            clangd = {},
+
+            clangd = {
+                -- Make clangd extract include paths/defines from GCC/G++
+                -- (helps when the real build uses GCC, especially in nonstandard environments)
+                cmd = {
+                    "clangd",
+                    "--query-driver=/usr/bin/g++,/usr/bin/gcc",
+                    -- optional but useful for debugging:
+                    -- "--log=verbose",
+                },
+
+                -- Filter out annoying clang diagnostic by its code
+                handlers = {
+                    ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)
+                        if result and result.diagnostics then
+                            result.diagnostics = filter_clang_diagnostics(result.diagnostics)
+                        end
+                        return default_publish(err, result, ctx, config)
+                    end,
+                },
+            },
             cmake = {
                 filetypes = { "cmake", "CMakeLists.txt" },
             },
             rust_analyzer = {},
-            gopls = {},
+            lua_ls = {
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { "vim" },
+                        },
+                        format = {
+                            enable = true,
+                            defaultConfig = {
+                                indent_style = "space",
+                                indent_size = "4",
+                            },
+                        },
+                    },
+                },
+            },
+            -- gopls = {},
             -- bashls = {},
             -- eslint = {},
             -- tsp_server = {},
@@ -149,58 +178,34 @@ return { -- LSP Configuration & Plugins
             -- matlab_ls = {},
             -- jsonls = {},
             -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-            --
-
-            lua_ls = {
-                -- cmd = {...},
-                -- filetypes = { ...},
-                -- capabilities = { capabilities },
-                settings = {
-                    Lua = {
-                        format = {
-                            enable = true,
-                            defaultConfig = {
-                                indent_style = "space",
-                                indent_size = "4",
-                            },
-                        },
-                        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-                        -- diagnostics = { disable = { 'missing-fields' } },
-                    },
-                },
-            },
         }
 
         -- Ensure the servers and tools above are installed
-        --  To check the current status of installed tools and/or manually install
-        --  other tools, you can run
+        --
+        -- To check the current status of installed tools and/or manually install
+        -- other tools, you can run
         --    :Mason
         --
-        --  You can press `g?` for help in this menu.
-        require("mason").setup()
+        -- You can press `g?` for help in this menu.
+        -- Mason package names (use hyphens, not underscores)
+        local ensure_installed = {
+            "clangd",
+            "cmake-language-server",
+            "rust-analyzer",
+            -- "gopls",
+            "lua-language-server",
+            "stylua",
+        }
 
-        -- You can add other tools here that you want Mason to install
-        -- for you, so that they are available from within Neovim.
-        local ensure_installed = vim.tbl_keys(servers or {})
-        vim.list_extend(ensure_installed, {
-            "stylua", -- Used to format Lua code
-        })
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
-        require("mason-lspconfig").setup({
-            automatic_enable = true,
-            handlers = {
-                function(server_name)
-                    local server = servers[server_name] or {}
-                    -- This handles overriding only values explicitly passed
-                    -- by the server configuration above. Useful when disabling
-                    -- certain features of an LSP (for example, turning off formatting for tsserver)
-                    server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-                    require("lspconfig")[server_name].setup(server)
-                end,
-            },
-            ensure_installed = {},
-            automatic_installation = true,
+        vim.lsp.config("*", {
+            capabilities = require("blink.cmp").get_lsp_capabilities(),
         })
+
+        for name, server in pairs(servers) do
+            vim.lsp.config(name, server)
+            vim.lsp.enable(name)
+        end
     end,
 }

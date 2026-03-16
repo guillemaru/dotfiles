@@ -25,7 +25,7 @@ return {
                     lualine_y = {
                         {
                             require("minuet.lualine"),
-                            -- the follwing is the default configuration
+                            -- the following is the default configuration
                             -- the name displayed in the lualine. Set to "provider", "model" or "both"
                             display_name = "provider",
                             -- separator between provider and model name for option "both"
@@ -51,6 +51,7 @@ return {
                         "filetype",
                     },
                 },
+                -- Use simplified statusline in plugin-specific windows
                 extensions = { "lazy", "mason", "oil", "quickfix" },
             })
             local harpoon = require("harpoon")

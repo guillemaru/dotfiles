@@ -19,8 +19,11 @@ vim.opt.mouse = "a"
 vim.opt.showmode = false
 
 -- Sync clipboard between OS and Neovim.
+--  Schedule to defer clipboard provider detection out of startup
 --  See `:help 'clipboard'`
-vim.opt.clipboard = "unnamedplus"
+vim.schedule(function()
+    vim.opt.clipboard = "unnamedplus"
+end)
 
 -- Enable break indent (for lines that are longer than the width of the window)
 vim.opt.breakindent = true
@@ -71,7 +74,7 @@ vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.inccommand = "split"
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 12
@@ -87,12 +90,11 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Diagnostic keymaps
 vim.keymap.set("n", "[d", function()
-    vim.diagnostic.goto_prev()
+    vim.diagnostic.jump({ count = -1, float = true })
 end, { desc = "Go to previous [D]iagnostic message" })
 vim.keymap.set("n", "]d", function()
-    vim.diagnostic.goto_next()
+    vim.diagnostic.jump({ count = 1, float = true })
 end, { desc = "Go to next [D]iagnostic message" })
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>", { desc = "[Q]uickfix next" })
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>", { desc = "[Q]uickfix prev" })
 
@@ -108,9 +110,9 @@ vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set("n", "<leader>lc", function()
-    vim.api.nvim_set_hl(0, "LineNr", { fg = "#C4C3D0" })
-end, { desc = "Change [L]ine colors (brighter)" })
+-- vim.keymap.set("n", "<leader>lc", function()
+--     vim.api.nvim_set_hl(0, "LineNr", { fg = "#C4C3D0" })
+-- end, { desc = "Change [L]ine colors (brighter)" })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -131,7 +133,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
     desc = "Save current buffer when switching to another buffer",
     pattern = "*",
     callback = function()
-        if vim.bo.modified then
+        if vim.bo.modified and vim.bo.buftype == "" and vim.fn.expand("%") ~= "" then
             vim.cmd("silent! write")
         end
     end,
@@ -171,6 +173,7 @@ require("lazy").setup({
     { import = "plugins.cmake" },
     { import = "plugins.mini" },
     { import = "plugins.oil" },
+    { import = "plugins.snacks" },
     { import = "plugins.tmux-navigator" },
     { import = "plugins.undo" },
     { import = "plugins.which-key" },
@@ -180,13 +183,14 @@ require("lazy").setup({
 
     { import = "plugins.autocompletion.llm" },
     { import = "plugins.autocompletion.blinkcmp" },
+    { import = "plugins.coding_agents.amp" },
+    { import = "plugins.coding_agents.claudecode" },
     { import = "plugins.lsp.lsp" },
 
     { import = "plugins.versioncontrol.gitsigns" },
     { import = "plugins.versioncontrol.perforce" },
 
     { import = "plugins.visuals.colorschemes.catppuccin" },
-    { import = "plugins.visuals.colorschemes.tokyo" },
     { import = "plugins.visuals.comments.todo-comments" },
     { import = "plugins.visuals.comments.comment-regions" },
     { import = "plugins.visuals.formatting.autoformat" },

@@ -1,7 +1,6 @@
 CompileFlags:
   Add:
     - -Wall
-    - -Wextra
     - -Werror
     - -pedantic
 Diagnostics:
@@ -15,14 +14,18 @@ Diagnostics:
     Remove:
     - bugprone-empty-catch
     - bugprone-easily-swappable-parameters
+    - constexpr_var_requires_const_init
     - cppcoreguidelines-avoid-magic-numbers
+    - cppcoreguidelines-non-private-member-variables-in-classes
     - cppcoreguidelines-special-member-functions
     - modernize-use-nodiscard
     - modernize-use-scoped-lock
     - modernize-use-trailing-return-type
+    - readability-convert-member-functions-to-static
     - readability-identifier-length
     - readability-identifier-naming
     - readability-implicit-bool-conversion
+    - readability-named-parameter
     - readability-uppercase-literal-suffix
     FastCheckFilter: Loose
   UnusedIncludes: Strict
